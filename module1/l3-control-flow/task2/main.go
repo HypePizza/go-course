@@ -35,7 +35,7 @@ func main() {
 	}
 	fmt.Printf("%d - составное, делители:", num)
 	for _, d := range divisors {
-		fmt.Printf("%d ", d)
+		fmt.Printf(" %d ", d)
 	}
 	fmt.Println()
 }
