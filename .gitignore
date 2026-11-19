@@ -1,0 +1,11 @@
+# Бинарники
+bin/
+*.exe
+
+# Системные файлы macOS
+.DS_Store
+
+
+# Другое
+golangroadmap2026
+Learning_Go_Jon_Bodner.pdf
