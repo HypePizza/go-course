@@ -17,12 +17,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "ошибка: %q - не целое число\n", args[1])
 		os.Exit(1)
 	}
-	if num < 1 {
-		fmt.Fprintln(os.Stderr, "ошибка: число меньше 1. нужно ввести число больше 1")
-		os.Exit(1)
-	}
-	if num == 1 {
-		fmt.Fprintln(os.Stderr, "ошибка: равно 1. нужно ввести число больше 1")
+	if num < 2 {
+		fmt.Fprintln(os.Stderr, "ошибка: число меньше 2. нужно ввести число больше или равное 2")
 		os.Exit(1)
 	}
 
@@ -37,10 +33,9 @@ func main() {
 		fmt.Printf("%d - простое\n", num)
 		return
 	}
-	fmt.Printf("%d - составное, делители: ", num)
+	fmt.Printf("%d - составное, делители:", num)
 	for _, d := range divisors {
 		fmt.Printf("%d ", d)
 	}
 	fmt.Println()
-
 }

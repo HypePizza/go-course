@@ -5,8 +5,8 @@ import (
 	"os"
 	"runtime"
 
-	"go-course/module1/l1-packages/hello/calc"
-	"go-course/module1/l1-packages/hello/greet" // свой пакет: имя модуля + путь к папке
+	"github.com/HypePizza/go-course/module1/l1-packages/hello/calc"
+	"github.com/HypePizza/go-course/module1/l1-packages/hello/greet" // свой пакет: имя модуля + путь к папке
 )
 
 func main() {
