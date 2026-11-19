@@ -1,3 +1,3 @@
-module github.com/HypePizza/go-course
+module go-course
 
 go 1.27.1
