@@ -33,9 +33,9 @@ func main() {
 		fmt.Printf("%d - простое\n", num)
 		return
 	}
-	fmt.Printf("%d - составное, делители:", num)
+	fmt.Printf(" %d - составное, делители:", num)
 	for _, d := range divisors {
-		fmt.Printf(" %d ", d)
+		fmt.Printf(" %d", d)
 	}
 	fmt.Println()
 }
