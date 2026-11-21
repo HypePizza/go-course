@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	B  = iota + 1
-	KB = 1 << (iota * 10)
+	B = 1 << (iota * 10)
+	KB
 	MB
 	GB
 	TB
@@ -21,7 +21,7 @@ func main() {
 	mode := len(args) - 1
 
 	if mode < 1 || mode > 2 {
-		fmt.Fprintf(os.Stderr, "использование:\n  go run . <байты>              → в удобные единицы\n  go run . <число> <единица>    → в байты")
+		fmt.Fprintf(os.Stderr, "использование:\n  go run . <байты>              → в удобные единицы\n  go run . <число> <единица>    → в байты\n")
 		os.Exit(1)
 	}
 
@@ -75,24 +75,25 @@ func main() {
 			os.Exit(1)
 		}
 		unit := strings.ToUpper(args[2])
-		if unit != "B" && unit != "KB" && unit != "MB" &&
-			unit != "GB" && unit != "TB" && unit != "PB" {
+
+		var multiplier float64
+		switch unit {
+		case "PB":
+			multiplier = PB
+		case "TB":
+			multiplier = TB
+		case "GB":
+			multiplier = GB
+		case "MB":
+			multiplier = MB
+		case "KB":
+			multiplier = KB
+		case "B":
+			multiplier = B
+		default:
 			fmt.Fprintf(os.Stderr, "ошибка: неизвестная единица %q, нужна B, KB, MB, GB, TB или PB\n", args[2])
 			os.Exit(1)
 		}
-		switch unit {
-		case "PB":
-			fmt.Printf("%d B\n", int64(value*PB))
-		case "TB":
-			fmt.Printf("%d B\n", int64(value*TB))
-		case "GB":
-			fmt.Printf("%d B\n", int64(value*GB))
-		case "MB":
-			fmt.Printf("%d B\n", int64(value*MB))
-		case "KB":
-			fmt.Printf("%d B\n", int64(value*KB))
-		case "B":
-			fmt.Printf("%d B\n", int64(value))
-		}
+		fmt.Printf("%d B\n", int64(value*multiplier))
 	}
 }
