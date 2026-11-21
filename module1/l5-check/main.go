@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	_  = iota
+	B  = iota + 1
 	KB = 1 << (iota * 10)
 	MB
 	GB
@@ -21,9 +21,7 @@ func main() {
 	mode := len(args) - 1
 
 	if mode < 1 || mode > 2 {
-		fmt.Println("использование:")
-		fmt.Println("\tgo run . <байты>\t\t→ в удобные единицы")
-		fmt.Println("\tgo run . <число> <единица>\t→ в байты")
+		fmt.Fprintf(os.Stderr, "использование:\n  go run . <байты>              → в удобные единицы\n  go run . <число> <единица>    → в байты")
 		os.Exit(1)
 	}
 
@@ -31,27 +29,41 @@ func main() {
 	case 1:
 		value, err := strconv.Atoi(args[1])
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "ошибка: %q - не целое число байт\n", args[1])
+			fmt.Fprintf(os.Stderr, "ошибка: %q — не целое число байт\n", args[1])
 			os.Exit(1)
 		}
 		if value < 0 {
 			fmt.Fprintln(os.Stderr, "ошибка: размер не может быть отрицательным")
 			os.Exit(1)
 		}
+		var unit string
+		var divisor float64
 		switch {
 		case value >= PB:
-			fmt.Printf("%.2f PB\n", float64(value)/PB)
+			unit = "PB"
+			divisor = PB
 		case value >= TB:
-			fmt.Printf("%.2f TB\n", float64(value)/TB)
+			unit = "TB"
+			divisor = TB
 		case value >= GB:
-			fmt.Printf("%.2f GB\n", float64(value)/GB)
+			unit = "GB"
+			divisor = GB
 		case value >= MB:
-			fmt.Printf("%.2f MB\n", float64(value)/MB)
+			unit = "MB"
+			divisor = MB
 		case value >= KB:
-			fmt.Printf("%.2f KB\n", float64(value)/KB)
+			unit = "KB"
+			divisor = KB
 		default:
-			fmt.Printf("%d B\n", value)
+			unit = "B"
+			divisor = 1
 		}
+		if unit == "B" {
+			fmt.Printf("%d %s\n", value, unit)
+		} else {
+			fmt.Printf("%.2f %s\n", float64(value)/divisor, unit)
+		}
+
 	case 2:
 		value, err := strconv.ParseFloat(args[1], 64)
 		if err != nil {
@@ -65,21 +77,22 @@ func main() {
 		unit := strings.ToUpper(args[2])
 		if unit != "B" && unit != "KB" && unit != "MB" &&
 			unit != "GB" && unit != "TB" && unit != "PB" {
-			fmt.Fprintf(os.Stderr, "ошибка: неизвестная еденица %q, нужна B, KB, MB, GB, TB или PB\n", unit)
+			fmt.Fprintf(os.Stderr, "ошибка: неизвестная единица %q, нужна B, KB, MB, GB, TB или PB\n", args[2])
+			os.Exit(1)
 		}
 		switch unit {
 		case "PB":
-			fmt.Printf("%.f B\n", value*PB)
+			fmt.Printf("%d B\n", int64(value*PB))
 		case "TB":
-			fmt.Printf("%.f B\n", value*TB)
+			fmt.Printf("%d B\n", int64(value*TB))
 		case "GB":
-			fmt.Printf("%.f B\n", value*GB)
+			fmt.Printf("%d B\n", int64(value*GB))
 		case "MB":
-			fmt.Printf("%.f B\n", value*MB)
+			fmt.Printf("%d B\n", int64(value*MB))
 		case "KB":
-			fmt.Printf("%.f B\n", value*KB)
+			fmt.Printf("%d B\n", int64(value*KB))
 		case "B":
-			fmt.Printf("%.f B\n", value)
+			fmt.Printf("%d B\n", int64(value))
 		}
 	}
 }
