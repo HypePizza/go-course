@@ -21,40 +21,41 @@ func fail(format string, args ...any) {
 	os.Exit(1)
 }
 
-func humanize(n int) string {
+func humanize(value int) (string, error) {
+	if value < 0 {
+		return "", fmt.Errorf("размер не может быть отрицательным")
+	}
 	var unit string
 	var divisor float64
 	switch {
-	case n >= PB:
+	case value >= PB:
 		unit = "PB"
 		divisor = PB
-	case n >= TB:
+	case value >= TB:
 		unit = "TB"
 		divisor = TB
-	case n >= GB:
+	case value >= GB:
 		unit = "GB"
 		divisor = GB
-	case n >= MB:
+	case value >= MB:
 		unit = "MB"
 		divisor = MB
-	case n >= KB:
+	case value >= KB:
 		unit = "KB"
 		divisor = KB
 	default:
 		unit = "B"
-		divisor = 1
+		return strconv.Itoa(value) + " " + unit, nil
 	}
-	if unit == "B" {
-		return strconv.Itoa(n) + " " + unit
-
-	}
-	return strconv.FormatFloat(float64(n)/divisor, 'f', 2, 64) + " " + unit
+	return strconv.FormatFloat(float64(value)/divisor, 'f', 2, 64) + " " + unit, nil
 }
 
 func toBytes(value float64, unit string) (int64, error) {
-	measurementUnit := strings.ToUpper(unit)
+	if value < 0 {
+		return 0, fmt.Errorf("размер не может быть отрицательным")
+	}
 	var multiplier float64
-	switch measurementUnit {
+	switch strings.ToUpper(unit) {
 	case "PB":
 		multiplier = PB
 	case "TB":
@@ -81,26 +82,22 @@ func main() {
 		fmt.Fprintf(os.Stderr, "использование:\n  go run . <байты>              → в удобные единицы\n  go run . <число> <единица>    → в байты\n")
 		os.Exit(1)
 	}
-
 	switch mode {
 	case 1:
 		value, err := strconv.Atoi(args[1])
 		if err != nil {
 			fail("%q — не целое число байт", args[1])
 		}
-		if value < 0 {
-			fail("размер не может быть отрицательным")
-		}
-		fmt.Println(humanize(value))
+		res, err := humanize(value)
+
+		fmt.Println(res)
 
 	case 2:
 		value, err := strconv.ParseFloat(args[1], 64)
 		if err != nil {
 			fail("%q - не число байт", args[1])
 		}
-		if value < 0 {
-			fail("размер не может быть отрицательным")
-		}
+
 		res, err := toBytes(value, args[2])
 		if err != nil {
 			fail("%s", err)

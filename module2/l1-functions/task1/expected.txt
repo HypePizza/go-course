@@ -10,6 +10,12 @@ exit=0
 $ hsize 2.7 B
 2 B$
 exit=0
+$ hsize -5
+$
+exit=0
+$ hsize abc GB
+ошибка: "abc" - не число байт$
+exit=1
 $ hsize abc
 ошибка: "abc" — не целое число байт$
 exit=1
