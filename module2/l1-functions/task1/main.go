@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -23,7 +24,7 @@ func fail(format string, args ...any) {
 
 func humanize(value int) (string, error) {
 	if value < 0 {
-		return "", fmt.Errorf("размер не может быть отрицательным")
+		return "", errors.New("размер не может быть отрицательным")
 	}
 	var unit string
 	var divisor float64
@@ -52,7 +53,7 @@ func humanize(value int) (string, error) {
 
 func toBytes(value float64, unit string) (int64, error) {
 	if value < 0 {
-		return 0, fmt.Errorf("размер не может быть отрицательным")
+		return 0, errors.New("размер не может быть отрицательным")
 	}
 	var multiplier float64
 	switch strings.ToUpper(unit) {
