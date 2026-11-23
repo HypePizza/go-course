@@ -21,8 +21,14 @@ func parseNumbers(args ...string) ([]float64, error) {
 	}
 	return res, nil
 }
+
+// нет проверки на пустой слайс. Отсечен функцией parseNumbers
 func stats(nums ...float64) (sum, avg, lo, hi float64) {
-	for _, value := range nums {
+	for index, value := range nums {
+		if index == 0 {
+			lo = value
+			hi = value
+		}
 		sum += value
 		if value < lo {
 			lo = value
@@ -39,7 +45,7 @@ func main() {
 	args := os.Args
 	values, err := parseNumbers(args[1:]...)
 	if err != nil {
-		fmt.Println("%w", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
 	sum, avg, min, max := stats(values...)
