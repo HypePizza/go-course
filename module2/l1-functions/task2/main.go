@@ -15,7 +15,7 @@ func parseNumbers(args ...string) ([]float64, error) {
 	for _, str := range args {
 		value, err := strconv.ParseFloat(str, 64)
 		if err != nil {
-			return []float64{}, fmt.Errorf("ошибка: %q - не число", str)
+			return []float64{}, fmt.Errorf("ошибка: %q – не число", str)
 		}
 		res = append(res, value)
 	}
