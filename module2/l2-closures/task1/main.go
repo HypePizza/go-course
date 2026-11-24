@@ -21,9 +21,6 @@ func twice(value int, action func(int) int) int {
 
 func main() {
 	addTwo := add(2)
-	multTwo := func(value int) int {
-		return 2 * value
-	}
 	fmt.Println(twice(3, addTwo))
-	fmt.Println(twice(3, multTwo))
+	fmt.Println(twice(3, func(value int) int { return 2 * value }))
 }
