@@ -8,12 +8,6 @@ func add(n int) func(int) int {
 	}
 }
 
-func mult(n int) func(int) int {
-	return func(value int) int {
-		return n * value
-	}
-}
-
 func twice(value int, action func(int) int) int {
 	value = action(value)
 	return action(value)
