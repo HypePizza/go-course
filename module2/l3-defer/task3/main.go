@@ -21,7 +21,7 @@ func clean() error {
 func runStep(name string, work func() error) (err error) {
 	defer func() {
 		if reason := recover(); reason != nil {
-			err = fmt.Errorf("%s: паника: %s", name, reason)
+			err = fmt.Errorf("%s: паника: %v", name, reason)
 		}
 	}()
 	err = work()
