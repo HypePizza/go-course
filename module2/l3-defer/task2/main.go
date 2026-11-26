@@ -12,10 +12,10 @@ func readSample(raw string, begin func() error, finish func()) (int, error) {
 		return 0, err
 	}
 	defer finish()
-	fmt.Println("рузультат открытия: успех")
+	fmt.Println("результат открытия: успех")
 	value, err := strconv.Atoi(raw)
 	if err != nil {
-		return 0, fmt.Errorf("ошибка: парсинг %q", raw)
+		return 0, fmt.Errorf("ошибка: парсинга %q %w ", raw, err)
 	}
 	return value, nil
 
