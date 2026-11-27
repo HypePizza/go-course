@@ -13,44 +13,53 @@ func count() func(int) int {
 	}
 }
 
-func markErr() func(err error) int {
-	sumErr := 0
-	return func(err error) int {
-		if err != nil {
-			sumErr += 1
-			return sumErr
+func markEnd() func(int) int {
+	sum := 0
+	return func(code int) int {
+		if code == 1 {
+			return sum
 		}
-		return sumErr
+		sum += 1
+		return sum
 	}
+
 }
 
-func meter(str string, count func(int) int, markErr func(error) int) (res int, err error) {
-	defer func() {
-		if err != nil {
-			markErr(err)
-		}
-	}()
+func meter(str string, count func(int) int, markEnd func(int) int) (err error) {
+	defer markEnd(0)
 	value, err := strconv.Atoi(str)
 	if err != nil {
-		err = fmt.Errorf("ошибка: %v", err)
+		return fmt.Errorf("ошибка: %v", err)
 	}
-	return count(value), err
+	count(value)
+	return err
 
 }
 
-func showRes(count func(int) int, markErr func(error) int) {
+func showRes(count func(int) int, markEnd func(int) int, counterErr int) {
 	fmt.Printf("сумма:%d\t", count(0))
-	fmt.Printf("кол-во ошибок:%d\n", markErr(nil))
+	fmt.Printf("завершено попыток:%d\t", markEnd(1))
+	fmt.Printf("получено ошибок:%d\n", counterErr)
 
 }
 
 func main() {
 	counter := count()
-	counterErr := markErr()
-	meter("5", counter, counterErr)
-	showRes(counter, counterErr)
-	meter("abc", counter, counterErr)
-	showRes(counter, counterErr)
-	meter("-2", counter, counterErr)
-	showRes(counter, counterErr)
+	counterEnd := markEnd()
+	counterErr := 0
+	err := meter("5", counter, counterEnd)
+	if err != nil {
+		counterErr += 1
+	}
+	showRes(counter, counterEnd, counterErr)
+	err = meter("abc", counter, counterEnd)
+	if err != nil {
+		counterErr += 1
+	}
+	showRes(counter, counterEnd, counterErr)
+	err = meter("-2", counter, counterEnd)
+	if err != nil {
+		counterErr += 1
+	}
+	showRes(counter, counterEnd, counterErr)
 }
